@@ -2,6 +2,7 @@
 //load express
 const express = require('express');
 const hbs = require('hbs');
+const fs = require('fs');
 
 var app = express();
 
@@ -11,11 +12,22 @@ app.set('view engine', 'hbs');
 hbs.registerPartials(__dirname + '/views/partials');
 
 //add middleware functions for help.html
-app.use(express.static(__dirname + '/public' ));
+
 app.use((request, response, next)=>{
-    console.log('1');
+    let now = new Date().toString();
+    var log = `${now}: ${request.method} ${request.url}`;
+    console.log(__dirname + '/server.log');
+    fs.appendFile('server.log', log +'\n',  (error)=> {
+        if (error)
+            console.log('Unable to append to server.log');
+    });
     next();
 });
+//app.use((request, response, next)=> {
+    //response.render('maintenance.hbs');
+    //we did not call next and we interrupt the script
+//});
+app.use(express.static(__dirname + '/public' ));
 
 //register helper functions used by handlebars template engine
 hbs.registerHelper('getCurrentYear', ()=>{

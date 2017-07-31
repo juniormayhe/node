@@ -17,7 +17,7 @@ app.set('views', __dirname + '/node-web-server/views');
 
 //support to partial views
 //hbs.registerPartials(__dirname + '/views/partials');
-hbs.registerPartials(__dirname + '/node-web-server/views/partials');
+hbs.registerPartials(__dirname + '/views/partials');
 
 
 

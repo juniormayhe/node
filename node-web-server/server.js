@@ -15,6 +15,11 @@ app.set('view engine', 'hbs');
 //hbs.registerPartials(__dirname + '/views/partials');
 hbs.registerPartials(__dirname + '/../views/partials');
 
+console.log(__dirname + '/views/partials');
+console.log(__dirname + '/../views/partials');
+console.log(__dirname + '/../../views/partials');
+
+
 //add middleware functions for help.html
 
 app.use((request, response, next)=>{

@@ -16,18 +16,10 @@ app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 
 //support to partial views
-//hbs.registerPartials(__dirname + '/views/partials');
 hbs.registerPartials(__dirname + '/views/partials');
 
 
-
-console.log(__dirname + '/views/partials');
-console.log(__dirname + '/../views/partials');
-console.log(__dirname + '/../../views/partials');
-
-
 //add middleware functions for help.html
-
 app.use((request, response, next)=>{
     let now = new Date().toString();
     var log = `${now}: ${request.method} ${request.url}`;
@@ -58,7 +50,6 @@ app.get('/', (request, response)=>{
     response.render('home.hbs', {
         pageTitle: 'Home page',
         welcomeMessage: 'Welcome to some website',
-        
     });
     //response.send({ name: 'Junior', likes: ['Madrid', 'Barcelona']});
 })
@@ -67,6 +58,15 @@ app.get('/', (request, response)=>{
 app.get('/about', (request, response)=>{
     response.render('about.hbs', {
         pageTitle: 'About page',
+        
+    });
+});
+
+//create a new route for projects
+app.get('/projects', (request, response)=>{
+    response.render('projects.hbs', {
+        pageTitle: 'Projects page',
+		portfolioMessage: 'My portfolio'
         
     });
 });

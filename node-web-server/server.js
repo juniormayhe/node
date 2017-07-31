@@ -4,6 +4,9 @@ const express = require('express');
 const hbs = require('hbs');
 const fs = require('fs');
 
+//get OS environment variable PORT for heroku is going to set
+const port = process.env.HEROKU_PORT || 3000;
+
 var app = express();
 
 //tell express what is our view engine: handlebars
@@ -62,6 +65,6 @@ app.get('/bad', (request, response)=>{
 });
 
 //bind app to a port in our server
-app.listen(3000, ()=>{
-    console.log('Server is up on port 3000');
+app.listen(port, ()=>{
+    console.log(`Server is up on port ${port}`);
 });

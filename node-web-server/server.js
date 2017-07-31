@@ -4,8 +4,8 @@ const express = require('express');
 const hbs = require('hbs');
 const fs = require('fs');
 
-//get OS environment variable PORT for heroku is going to set
-const port = process.env.HEROKU_PORT || 3000;
+//get OS environment variable PORT for heroku or set 3000 if null
+const port = process.env.PORT || 3000;
 
 var app = express();
 

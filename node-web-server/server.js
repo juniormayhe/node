@@ -13,7 +13,7 @@ var app = express();
 app.set('view engine', 'hbs');
 
 //register views folder
-app.set('views', __dirname + '/node-web-server/views');
+app.set('views', __dirname + '/views');
 
 //support to partial views
 //hbs.registerPartials(__dirname + '/views/partials');

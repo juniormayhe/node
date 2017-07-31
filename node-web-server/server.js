@@ -12,7 +12,8 @@ var app = express();
 //tell express what is our view engine: handlebars
 app.set('view engine', 'hbs');
 //support to partial views
-hbs.registerPartials(__dirname + '/../views/partials');
+//hbs.registerPartials(__dirname + '/views/partials');
+hbs.registerPartials('./node-web-server/views/partials');
 
 //add middleware functions for help.html
 

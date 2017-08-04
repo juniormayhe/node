@@ -17,7 +17,6 @@ test_script:
   - node --version
   - npm --version
   # run tests
-  - cd node-tests
   - npm test
 
 # Don't actually build.

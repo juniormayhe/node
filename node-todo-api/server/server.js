@@ -1,61 +1,40 @@
-const mongoose = require('mongoose');
+const express = require('express');
+const bodyParser = require('body-parser');//convert string to json obj and attach to http request 
 
-//creating model before connection
-/*let Todo = mongoose.model('Todo', {
-    text: {
-        type: String
+const {mongoose}= require('./db/mongoose');
+const {Todo} = require('./models/todo');
+const {User} = require('./models/user');
+
+
+const app = express();
+
+app.use(bodyParser.json());
+
+//setup routes
+//insert with post
+app.post('/todos', (req, res)=>{
+
+    var todo = new Todo({
+        text: req.body.text
+    });
+
+    todo.save().then((doc)=>{
+        //doc saved then send it back saved doc to client
+        res.send(doc);
     },
-    completed: {
-        type: Boolean
-    },
-    completedAt: {
-        type: Number
-    }
-});*/
+    (err) => res.status(400).send(err));
+    console.log(req.body);
+});
 
+// get all todos
+app.get('/todos', (req, res)=>{
+    req.next();
+});    
 
-//use promises instead of callbacks
-mongoose.Promise = global.Promise;
-//mongoose.connect('mongodb://localhost:27017/TodoApp');
-mongoose.connect('mongodb://localhost:27017/TodoApp', {
-    useMongoClient: true
-}).then(
-    (fulfilled)=>{
-        //prepare model    
-        let User = mongoose.model('User', {
-            email: { 
-                type: String,
-                required: true,
-                trim: true,
-                minlength: 1
-            }
-        })
+app.listen(3000, ()=>{
+    console.log('Server up and running on port 3000');
+});
 
-        //prepare obj
-        const user = new User({
-            email: 'junior@gmail.com'
-        });
-
-        //save
-        user.save().then(
-            (doc)=> console.log(doc),
-            (err)=> console.log(err)
-        );
-
-        /*
-        const todo = new Todo({
-            text: 'Walk the dog',
-            completed: true,
-            completedAt: 12345
-        });
-        //save in mongodb
-        todo2.save().then(
-            (doc)=>{console.log(doc);}, 
-            (err)=> console.log(err));
-            */
-
-        
-    }, 
-    (rejected)=> console.log(rejected));
-
-console.log('Server up and running');
+module.exports = {
+    app
+}

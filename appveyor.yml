@@ -10,10 +10,10 @@ install:
   - cd node-tests
   - npm install
   - npm install mocha
-  - cd ..\node-todo-api
-  - npm install
-  - npm install mocha
-  
+  #- cd ..\node-todo-api
+  #- npm install
+  #- npm install mocha
+
 # Post-install test scripts.
 test_script:
   # Output useful info for debugging.

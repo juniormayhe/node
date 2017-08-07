@@ -8,6 +8,8 @@ const {User} = require('./models/user');
 
 
 const app = express();
+const port = process.env.PORT || 3000;//set by heroku
+//process.env.MONGODB_URI = 'mongodb://nodeman:rocketman!@ds163397.mlab.com:63397/node-todo-api';
 
 app.use(bodyParser.json());
 
@@ -53,7 +55,7 @@ app.get('/todos/:todoID', (req, res)=>{
 });
 
 app.listen(3000, ()=>{
-    console.log('Server up and running on port 3000');
+    console.log(`Server up and running on port ${port}`);
 });
 
 module.exports = {

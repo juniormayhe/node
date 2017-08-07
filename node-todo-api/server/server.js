@@ -54,8 +54,8 @@ app.get('/todos/:todoID', (req, res)=>{
     .catch((e)=> res.status(400).send());//send empty for security reasons
 });
 
-app.listen(3000, ()=>{
-    console.log(`Server up and running on port ${port}`);
+app.listen(port, ()=>{
+    console.log(`Server up and running on port ${port} in mode ${app.settings.env}`);
 });
 
 module.exports = {

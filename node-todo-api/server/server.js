@@ -23,12 +23,16 @@ app.post('/todos', (req, res)=>{
         res.send(doc);
     },
     (err) => res.status(400).send(err));
-    console.log(req.body);
+    //console.log(req.body);
 });
 
 // get all todos
 app.get('/todos', (req, res)=>{
-    req.next();
+    Todo.find().then(
+        (todos)=>{
+            res.send({todos});
+        }, 
+        (err)=> res.status(400).send(err));
 });    
 
 app.listen(3000, ()=>{

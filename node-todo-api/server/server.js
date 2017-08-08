@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 const express = require('express');
 const bodyParser = require('body-parser');//convert string to json obj and attach to http request 
 
@@ -67,6 +69,39 @@ app.delete('/todos/:todoID', (req, res) => {
         res.send({todo, status: res.statusCode});
 
     }).catch((err)=> res.send(400).send({}));//send empty body
+
+});
+
+//update just specific properties
+app.patch('/todos/:todoID', (req, res)=>{
+    let todoID = req.params.todoID;
+    if (!ObjectID.isValid(todoID))
+        return res.status(404).send({});//send empty for security reasons
+
+    //with lodash, pick from body only specific properties to update!
+    let _body = _.pick(req.body, ['text', 'completed']);
+    
+    //check if completed is boolean
+    if (_.isBoolean(_body.completed) && _body.completed){
+        
+        _body.completedAt = new Date().getTime();//returns number of millisenconds since 1970
+    } else {
+        _body.completed = false;
+        _body.completedAt = null;
+    }
+
+    //in mongoose returnOriginal is called 'new'
+    let returnOriginal = true;
+    //do a query to update db
+    Todo.findByIdAndUpdate(todoID, { $set: _body }, { new: returnOriginal })
+        .then((todo)=>{
+            console.log(_body);
+            if (!todo)
+                return res.status(404).send();
+
+            res.send({todo: todo});//or ES6 {todo}
+        })
+        .catch((err)=> res.status(400).send({}));
 
 });
 

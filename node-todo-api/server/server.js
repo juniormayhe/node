@@ -63,7 +63,7 @@ app.delete('/todos/:todoID', (req, res) => {
         if (!todo)
             return res.status(404).send({});
 
-        console.log('todo removed', JSON.stringify(todo, undefined, 2));
+        //console.log('todo removed', JSON.stringify(todo, undefined, 2));
         res.send({todo, status: res.statusCode});
 
     }).catch((err)=> res.send(400).send({}));//send empty body

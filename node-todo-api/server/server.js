@@ -54,6 +54,22 @@ app.get('/todos/:todoID', (req, res)=>{
     .catch((e)=> res.status(400).send());//send empty for security reasons
 });
 
+app.delete('/todos/:todoID', (req, res) => {
+    let todoID = req.params.todoID;
+    if (!ObjectID.isValid(todoID))
+        return res.status(404).send({});//send empty for security reasons
+
+    Todo.findByIdAndRemove(todoID).then((todo)=> {
+        if (!todo)
+            return res.status(404).send({});
+
+        console.log('todo removed', JSON.stringify(todo, undefined, 2));
+        res.send({todo, status: res.statusCode});
+
+    }).catch((err)=> res.send(400).send({}));//send empty body
+
+});
+
 app.listen(port, ()=>{
     console.log(`Server up and running on port ${port} in mode ${app.settings.env}`);
 });

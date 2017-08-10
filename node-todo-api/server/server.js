@@ -1,3 +1,8 @@
+require('./../config/config');
+
+//for production you can set
+// heroku config:set MONGODB_URI=mongodb://user:password@ds163397.mlab.com:63397/node-todo-api
+
 const _ = require('lodash');
 
 const express = require('express');
@@ -10,7 +15,7 @@ const {User} = require('./models/user');
 
 
 const app = express();
-const port = process.env.PORT || 3000;//set by heroku
+const port = process.env.PORT;//set by heroku
 //process.env.MONGODB_URI = 'mongodb://nodeman:rocketman!@ds163397.mlab.com:63397/node-todo-api';
 
 app.use(bodyParser.json());

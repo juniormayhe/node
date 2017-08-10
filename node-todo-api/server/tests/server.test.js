@@ -8,9 +8,10 @@ const {Todo} = require('./../models/todo');
 //seed data 
 const todos = [
     {_id: new ObjectID(), text: 'First test todo'},
-    {_id: new ObjectID(), text: 'Second test todo'}
-]
+    {_id: new ObjectID(), text: 'Second test todo', completed: true, completedAt: 333}
+];
 
+/*
 //run some code before each test case
 beforeEach((done)=> {
     //whipe all todos to ensure db is empty
@@ -18,7 +19,13 @@ beforeEach((done)=> {
         //push dummy data
         return Todo.insertMany(todos);
     }).then(()=> done());//async is done
+});*/
+beforeEach((done) => {
+  Todo.remove({}).then(() => {
+    return Todo.insertMany(todos);
+  }).then(() => done());
 });
+
 
 //use mocha describe() and it()
 describe('POST /todos', ()=>{
@@ -76,6 +83,7 @@ describe('GET /todos', ()=> {
     });
 });
 
+
 describe('GET /todos/:todoID', ()=> {
     it('should return todo doc', (done)=>{
         request(app).get(`/todos/${todos[0]._id.toHexString()}`)
@@ -99,7 +107,7 @@ describe('GET /todos/:todoID', ()=> {
     it('should return a 404 for non object ID', (done)=>{
         const invalidTodoID = '1234';
         request(app).get(`/todos/${invalidTodoID}`)
-            .expect(400)
+            .expect(404)
             .expect((res) => {
                 expect(res.body).toEqual({});
             })
@@ -107,40 +115,73 @@ describe('GET /todos/:todoID', ()=> {
     });
 });
 
-describe('DELETE /todos/:todoID', ()=>{
-    it('should remove a todo', (done)=> {
-        let hexID = todos[1]._id.toHexString();
-        request(app).delete(`/todos/${hexID}`)
-            .expect(200)
-            .expect((res)=>{
-                expect(res.body.todo._id).toBe(hexID);
-            })
-            .end((err, res)=>{
-                if (err)
-                    return done();
-                
-                //query db find by id, it should not exist
-                Todo.findById(hexID).then((todo)=>{
-                    //expect todo to be null / not exist
-                    expect(todo).toNotExist();
-                    done();
-                }).catch((err)=> done());
-        });
-    });//it
 
-    it('should return 404 if todo no found', (done)=> {
-        let hexID = new ObjectID().toHexString();
-        request(app).delete(`/todos/${hexID}`)
-            .expect(404)
-            .end(done());
-    });
+describe('DELETE /todos/:id', () => {
+  it('should remove a todo', (done) => {
+    var hexId = todos[1]._id.toHexString();
 
-    it('should return 404 if objectID is invalid', (done)=> {
-        let hexID = '1234';
-        request(app).delete(`/todos/${hexID}`)
-            .expect(404)
-            .end(done());
+    request(app)
+      .delete(`/todos/${hexId}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.todo._id).toBe(hexId);
+      })
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
 
-    });
+        //query db find by id, it should not exist
+        Todo.findById(hexId).then((todo) => {
+            //expect todo to be null / not exist
+          expect(todo).toNotExist();
+          done();
+        }).catch((e) => done(e));
+      });
+  });//it
 
+  it('should return 404 if todo not found', (done) => {
+    var hexId = new ObjectID().toHexString();
+
+    request(app).delete(`/todos/${hexId}`)
+      .expect(404)
+      .end(done);
+  });
+
+  it('should return 404 if object id is invalid', (done) => {
+    request(app)
+      .delete('/todos/123abc')
+      .expect(404)
+      .end(done);
+  });
+});
+
+
+
+describe('PATCH /todos/:id', () => {
+  it('should return todo doc', (done) => {
+    request(app)
+      .get(`/todos/${todos[0]._id.toHexString()}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.todo.text).toBe(todos[0].text);
+      })
+      .end(done);
+  });
+
+  it('should return 404 if todo not found', (done) => {
+    var hexId = new ObjectID().toHexString();
+
+    request(app)
+      .get(`/todos/${hexId}`)
+      .expect(404)
+      .end(done);
+  });
+
+  it('should return 404 for non-object ids', (done) => {
+    request(app)
+      .get('/todos/123abc')
+      .expect(404)
+      .end(done);
+  });
 });

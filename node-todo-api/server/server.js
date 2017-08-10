@@ -46,12 +46,12 @@ app.get('/todos/:todoID', (req, res)=>{
     
     let todoID = req.params.todoID;
     if (!ObjectID.isValid(todoID))
-        return res.status(400).send({});//send empty for security reasons
+        return res.status(404).send({});//send empty for security reasons
 
     Todo.findById(todoID).then((todo)=>{
         if (!todo)
-            res.status(404).send('Todo not found');
-        res.send({todo, status: res.statusCode});//when sending object you can attach more properties
+            res.status(404).send();
+        res.send({todo});//when sending object you can attach more properties
     })
     .catch((e)=> res.status(400).send());//send empty for security reasons
 });
@@ -59,50 +59,44 @@ app.get('/todos/:todoID', (req, res)=>{
 app.delete('/todos/:todoID', (req, res) => {
     let todoID = req.params.todoID;
     if (!ObjectID.isValid(todoID))
-        return res.status(404).send({});//send empty for security reasons
+        return res.status(404).send();//send empty for security reasons
 
     Todo.findByIdAndRemove(todoID).then((todo)=> {
         if (!todo)
-            return res.status(404).send({});
+            return res.status(404).send();
 
         //console.log('todo removed', JSON.stringify(todo, undefined, 2));
-        res.send({todo, status: res.statusCode});
+        res.send({todo});
 
-    }).catch((err)=> res.send(400).send({}));//send empty body
+    }).catch((err)=> res.send(400).send());//send empty body
 
 });
 
-//update just specific properties
-app.patch('/todos/:todoID', (req, res)=>{
-    let todoID = req.params.todoID;
-    if (!ObjectID.isValid(todoID))
-        return res.status(404).send({});//send empty for security reasons
+//PATCH /todos/:todoID
+app.patch('/todos/:todoID', (req, res) => {
+  var todoID = req.params.todoID;
+  var body = _.pick(req.body, ['text', 'completed']);
 
-    //with lodash, pick from body only specific properties to update!
-    let _body = _.pick(req.body, ['text', 'completed']);
-    
-    //check if completed is boolean
-    if (_.isBoolean(_body.completed) && _body.completed){
-        
-        _body.completedAt = new Date().getTime();//returns number of millisenconds since 1970
-    } else {
-        _body.completed = false;
-        _body.completedAt = null;
+  if (!ObjectID.isValid(todoID)) {
+    return res.status(404).send();
+  }
+
+  if (_.isBoolean(body.completed) && body.completed) {
+    body.completedAt = new Date().getTime();
+  } else {
+    body.completed = false;
+    body.completedAt = null;
+  }
+
+  Todo.findByIdAndUpdate(todoID, {$set: body}, {new: true}).then((todo) => {
+    if (!todo) {
+      return res.status(404).send();
     }
 
-    //in mongoose returnOriginal is called 'new'
-    let returnOriginal = true;
-    //do a query to update db
-    Todo.findByIdAndUpdate(todoID, { $set: _body }, { new: returnOriginal })
-        .then((todo)=>{
-            console.log(_body);
-            if (!todo)
-                return res.status(404).send();
-
-            res.send({todo: todo});//or ES6 {todo}
-        })
-        .catch((err)=> res.status(400).send({}));
-
+    res.send({todo});
+  }).catch((e) => {
+    res.status(400).send();
+  })
 });
 
 app.listen(port, ()=>{

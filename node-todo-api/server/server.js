@@ -21,7 +21,8 @@ const port = process.env.PORT;//set by heroku
 app.use(bodyParser.json());
 
 //setup routes
-//insert with post
+
+//POST /todos
 app.post('/todos', (req, res)=>{
 
     var todo = new Todo({
@@ -61,6 +62,7 @@ app.get('/todos/:todoID', (req, res)=>{
     .catch((e)=> res.status(400).send());//send empty for security reasons
 });
 
+//DELETE /todos/:todoID
 app.delete('/todos/:todoID', (req, res) => {
     let todoID = req.params.todoID;
     if (!ObjectID.isValid(todoID))
@@ -102,6 +104,20 @@ app.patch('/todos/:todoID', (req, res) => {
   }).catch((e) => {
     res.status(400).send();
   })
+});
+
+
+//POST /users
+app.post('/users', (req, res)=>{
+
+    var body = _.pick(req.body, ['email', 'password']);
+    var user = new User(body);
+
+    user.save().then((doc)=>{
+        //doc saved then send it back saved doc to client
+        res.send(doc);
+    }).catch((err)=> res.status(400).send(err));
+    //console.log(req.body);
 });
 
 app.listen(port, ()=>{

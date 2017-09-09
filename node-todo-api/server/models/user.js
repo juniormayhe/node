@@ -61,6 +61,27 @@ UserSchema.methods.generateAuthToken = function (){
     return user.save().then(()=> token);
 }
 
+//static method for model, not instance method
+UserSchema.statics.findByToken = function (token){
+    let user = this;//regular function because we want to bind to 'this'
+    let decoded;
+
+    try {
+        //decode a token
+        decoded = jwt.verify(token, 'abc123');
+    }
+    catch(e) { 
+        //invalid token, then stops and triggers catch in server.js
+        //return new Promise((resolve, reject)=>{reject();}); or:
+        return Promise.reject('reason: invalid token');
+    }
+    //we can bind a then() in the promise below
+    return User.findOne({ 
+        '_id': decoded._id, 
+        'tokens.token': token,
+        'tokens.access': 'auth'});
+}
+
 //prepare model    
 const User = mongoose.model('User', UserSchema );
 

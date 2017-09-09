@@ -12,7 +12,7 @@ const {ObjectID} = require('mongodb');
 const {mongoose}= require('./db/mongoose');
 const {Todo} = require('./models/todo');
 const {User} = require('./models/user');
-
+const {authenticate} = require('./middleware/authenticate');
 
 const app = express();
 const port = process.env.PORT;//set by heroku
@@ -107,14 +107,12 @@ app.patch('/todos/:todoID', (req, res) => {
 });
 
 
-//POST /users
+//POST /users to signup
 app.post('/users', (req, res)=>{
 
     var body = _.pick(req.body, ['email', 'password']);
     var user = new User(body);
 
-
-    
     user.save().then(()=>{
         return user.generateAuthToken();
     })
@@ -125,6 +123,14 @@ app.post('/users', (req, res)=>{
     })
     .catch((err)=> res.status(400).send(err));
     //console.log(req.body);
+});
+
+
+
+//private route
+app.get('/users/me', authenticate, (req, res)=>{
+    //send modified request with user
+    res.send(req.user);
 });
 
 app.listen(port, ()=>{

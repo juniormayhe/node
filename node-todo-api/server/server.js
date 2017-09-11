@@ -127,12 +127,31 @@ app.post('/users', (req, res)=>{
 
 
 
-//private route for signing in
+//private route for signing in with middleware function authenticate
 app.get('/users/me', authenticate, (req, res)=>{
     //send modified request with user
     res.send(req.user);
 });
 
+//POST /users/login {email, password}
+app.post('/users/login', (req, res)=>{
+    var body = _.pick(req.body, ['email', 'password']);
+    
+    User.findByCredentials(body.email, body.password).then(user=>{
+        user.generateAuthToken().then((token)=>{
+            //send user along with token to client
+            res.header('x-auth', token).send(user);
+        });
+        
+    }).catch(e=>{
+        //if no user is found
+        res.status(400).send();//empty response
+    });
+    
+    
+});
+
+//listen to routes
 app.listen(port, ()=>{
     console.log(`Server up and running on port ${port} in mode ${app.settings.env}`);
 });

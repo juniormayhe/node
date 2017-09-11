@@ -82,6 +82,28 @@ UserSchema.statics.findByToken = function (token){
         'tokens.access': 'auth'});
 }
 
+//static method for model, not instance method
+UserSchema.statics.findByCredentials = function (email, password){
+    let user = this;//regular function because we want to bind to 'this'
+    
+    return User.findOne({email}).then(user=>{
+        if (!user){
+            //trigger catch from caller
+            return Promise.reject();
+        }
+        return new Promise((resolve, reject)=>{
+            bcrypt.compare(password, user.password, (err, result)=>{
+                if (result){//passwords match
+                    resolve(user);
+                }
+                else{
+                    reject();
+                }
+            });
+        });
+    });
+}
+
 //mogoose middleware for hashing password before saving it in db
 UserSchema.pre('save', function(next){
     let user = this;

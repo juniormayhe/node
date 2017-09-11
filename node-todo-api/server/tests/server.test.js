@@ -230,7 +230,7 @@ describe('POST /users', ()=>{
                 //password should be hashed
                 expect(user.password).toNotBe(password);
                 done();
-            })
+            }).catch(e=> done(e));
         });
     });
 
@@ -254,5 +254,59 @@ describe('POST /users', ()=>{
         .send({email, password})
         .expect(400)
         .end(done);
+    });
+});
+
+//test login
+describe('POST /users/login', ()=>{
+    it('should login user and return auth token', (done)=>{
+        //supertest
+        request(app)
+        .post('/users/login')
+        .send({ email: users[1].email, password: users[1].password})
+        .expect(200)
+        .expect(res=>{
+            expect(res.headers['x-auth']).toExist();
+            expect(res.body._id).toBe(users[1]._id.toHexString());
+            expect(res.body.email).toBe(users[1].email);
+            
+        })
+        .end((err,res)=>{
+            if (err){
+                return done(err);
+            }
+            User.findById(users[1]._id).then(user=>{
+                //check if there is access and token properties
+                expect(user.tokens[0]).toInclude({
+                    access: 'auth',
+                    token: res.headers['x-auth']
+                });
+                done();
+            }).catch(e=> done(e));
+        });
+    });
+
+    it('should reject invalid login', (done)=>{
+        //supertest
+        request(app)
+        .post('/users/login')
+        .send({ email: users[1].email, password: 'invalidpass'})
+        .expect(400)
+        .expect(res=>{
+            expect(res.headers['x-auth']).toNotExist();
+            expect(res.body).toEqual({});
+        })
+        .end((err,res)=>{
+            if (err){
+                return done(err);
+            }
+            //why should I test a user with a invalid pass?
+            User.findById(users[1]._id).then(user=>{
+                console.log(user);
+                //check if there is access and token properties
+                expect(user.tokens.length).toBe(0);
+                done();
+            }).catch(e=> done(e));
+        });
     });
 });

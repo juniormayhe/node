@@ -300,7 +300,7 @@ describe('POST /users/login', ()=>{
             if (err){
                 return done(err);
             }
-            //why should I test a user with a invalid pass?
+            
             User.findById(users[1]._id).then(user=>{
                 console.log(user);
                 //check if there is access and token properties

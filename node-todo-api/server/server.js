@@ -127,7 +127,7 @@ app.post('/users', (req, res)=>{
 
 
 
-//private route
+//private route for signing in
 app.get('/users/me', authenticate, (req, res)=>{
     //send modified request with user
     res.send(req.user);

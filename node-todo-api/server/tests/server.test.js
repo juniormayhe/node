@@ -20,7 +20,9 @@ describe('POST /todos', ()=>{
         const _text = 'Test todo text';
         
         //use supertest request(app).verb().expect()...end()
-        request(app).post('/todos').send({ text: _text })
+        request(app).post('/todos')
+            .set('x-auth', users[0].tokens[0].token)
+            .send({ text: _text })
             .expect(200)
             .expect((res)=>{
                 //use expect(obj).toBe() assertion
@@ -43,7 +45,9 @@ describe('POST /todos', ()=>{
 
     it('should not create todo with invalid data',()=>{
         //use supertest and send an empty body
-        request(app).post('/todos').send({})
+        request(app).post('/todos')
+            .set('x-auth', users[0].tokens[0].token)
+            .send({})
             .expect(400)
             .expect((err, res)=> {
                 if (err)
@@ -63,9 +67,11 @@ describe('POST /todos', ()=>{
 describe('GET /todos', ()=> {
     
     it('should get all todos', (done)=>{
-        request(app).get('/todos')
+        request(app)
+            .get('/todos')
+            .set('x-auth', users[0].tokens[0].token)
             .expect(200)
-            .expect((res)=> {expect(res.body.todos.length).toBe(2);})
+            .expect((res)=> {expect(res.body.todos.length).toBe(1);})
             .end(done);
     });
 });

@@ -52,3 +52,10 @@ Instead, you could use mLab addon from Heroku site, but you will need to provide
 ### Check errors in heroku
 
     heroku logs
+
+## Running nodemon
+
+You might wish to run nodemon in order to pick any source file changes.
+
+    npm install nodemon -g
+    nodemon server/server.js

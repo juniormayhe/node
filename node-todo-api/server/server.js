@@ -22,11 +22,12 @@ app.use(bodyParser.json());
 
 //setup routes
 
-//POST /todos
-app.post('/todos', (req, res)=>{
+//POST /todos (private)
+app.post('/todos', authenticate, (req, res)=>{
 
     var todo = new Todo({
-        text: req.body.text
+        text: req.body.text,
+        _creator: req.user._id
     });
 
     todo.save().then((doc)=>{
@@ -37,9 +38,10 @@ app.post('/todos', (req, res)=>{
     //console.log(req.body);
 });
 
-// get all todos
-app.get('/todos', (req, res)=>{
-    Todo.find().then(
+// get all todos (private)
+app.get('/todos', authenticate, (req, res)=>{
+    //show only todos for logged in user
+    Todo.find({_creator: req.user._id}).then(
         (todos)=>{
             res.send({todos});
         }, 

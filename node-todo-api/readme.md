@@ -15,7 +15,12 @@ https://nameless-refuge-45938.herokuapp.com/todos
 or locally
 http://localhost:3000/todos
 
-## Heroku Setup
+## Heroku configuration if you want to run this app
+    npm install -g heroku-cli
+    heroku login
+    node server/server.js
+
+## Heroku Setup if you want to start from scratch
 
 ### Create a heroku app at your root folder
     heroku create

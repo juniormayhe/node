@@ -147,8 +147,15 @@ app.post('/users/login', (req, res)=>{
         //if no user is found
         res.status(400).send();//empty response
     });
-    
-    
+});
+
+//private route for deleting token of current logged user
+app.delete('/users/me/token', authenticate, (req,res)=>{
+    req.user.removeToken(req.token).then(()=>{
+        res.status(200).send();
+    }, ()=>{
+        res.status(400).send();
+    });
 });
 
 //listen to routes

@@ -1,27 +1,16 @@
 {
-  "name": "root-todo-api",
+  "name": "web-server",
   "version": "1.0.0",
-  "description": "Call todo api from root folder, dependencies are for heroku",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node /app/node-todo-api/server/server.js"
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
-  "engines": {
-    "node": "8.2.1"
-  },
   "dependencies": {
-    "body-parser": "^1.17.2",
     "express": "^4.15.3",
-    "mongodb": "^2.2.30",
-    "mongoose": "^4.11.5"
-  },
-  "devDependencies": {
-    "expect": "^1.20.2",
-    "mocha": "^3.5.0",
-    "nodemon": "^1.11.0",
-    "supertest": "^3.0.0"
+    "hbs": "^4.0.1"
   }
 }

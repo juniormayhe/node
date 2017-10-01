@@ -61,6 +61,18 @@ UserSchema.methods.generateAuthToken = function (){
     return user.save().then(()=> token);
 }
 
+//adds instance method for deleting user's token
+UserSchema.methods.removeToken = function(tokenToRemove){
+    //mongodb $pull removes item from array that match a criteria
+    var user= this;
+    //if matches, token property will be removed
+    return user.update({
+        $pull: {
+            tokens: {token: tokenToRemove}
+        }
+    });
+};
+
 //static method for model, not instance method
 UserSchema.statics.findByToken = function (token){
     let user = this;//regular function because we want to bind to 'this'

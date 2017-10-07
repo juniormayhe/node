@@ -25,6 +25,12 @@ http://localhost:3000/todos
 ### Create a heroku app at your root folder
     heroku create
 
+### Set Json Web Token production configuration in heroku app
+    heroku config:set JWT_NAME=jqidlqooepskcha
+
+### Show heroku production enviroment variables
+    heroku config
+
 ### Check if you already have heroku repo configured
     git remote -v
 

@@ -50,7 +50,7 @@ UserSchema.methods.generateAuthToken = function (){
     //we do not use arrow function because it does not bind to this keyword
     var user = this;//current instance of user
     var access = 'auth';
-    const secret='abc123';
+    const secret=process.env.JWT_SECRET;
 
     var token = jwt.sign({
         _id: user._id.toHexString(), 
@@ -80,7 +80,7 @@ UserSchema.statics.findByToken = function (token){
 
     try {
         //decode a token
-        decoded = jwt.verify(token, 'abc123');
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
     }
     catch(e) { 
         //invalid token, then stops and triggers catch in server.js

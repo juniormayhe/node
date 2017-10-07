@@ -1,4 +1,4 @@
-require('./../config/config');
+require('./config/config');
 
 //for production you can set
 // heroku config:set MONGODB_URI=mongodb://user:password@ds163397.mlab.com:63397/node-todo-api

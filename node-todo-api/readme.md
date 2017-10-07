@@ -51,7 +51,7 @@ Instead, you could use mLab addon from Heroku site, but you will need to provide
 
     heroku addons:create mongolab:sandbox
 
-### Publish changes to your git and publish heroku
+### Publish changes to your git and publish to production at heroku
 
     git commit -am 'adding files' && git push && git push heroku master
 

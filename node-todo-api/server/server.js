@@ -134,10 +134,11 @@ app.post('/users', (req, res)=>{
     .then((token)=> {
         //doc saved then add token to header and 
         //send it back saved doc to client
-        console.log(`token ${token}`);
         res.header('x-auth', token).send(user);
     })
     .catch((err)=> {
+        //Maybe you do not have a heroku variable configured
+        //heroku config:set JWT_SECRET=abc123
         console.log(err, err.stack.split("\n"));
         res.status(400).send(err);
     });

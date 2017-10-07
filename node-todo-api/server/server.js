@@ -128,14 +128,19 @@ app.post('/users', (req, res)=>{
     var user = new User(body);
 
     user.save().then(()=>{
+        console.log('will generate token');
         return user.generateAuthToken();
     })
     .then((token)=> {
         //doc saved then add token to header and 
         //send it back saved doc to client
+        console.log(`token $token`);
         res.header('x-auth', token).send(user);
     })
-    .catch((err)=> res.status(400).send(err));
+    .catch((err)=> {
+        console.trace();
+        res.status(400).send(err);
+    });
     //console.log(req.body);
 });
 

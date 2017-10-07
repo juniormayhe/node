@@ -51,7 +51,7 @@ UserSchema.methods.generateAuthToken = function (){
     var user = this;//current instance of user
     var access = 'auth';
     const secret=process.env.JWT_SECRET || 'empty';
-    console.log(`secret ${secret}`)
+    //console.log(`secret ${secret}`);
 
     var token = jwt.sign({
         _id: user._id.toHexString(), 

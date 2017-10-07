@@ -128,13 +128,14 @@ app.post('/users', (req, res)=>{
     var user = new User(body);
 
     user.save().then(()=>{
-        console.log('will generate token');
+        console.log('will generate token...');
         return user.generateAuthToken();
     })
     .then((token)=> {
         //doc saved then add token to header and 
         //send it back saved doc to client
         res.header('x-auth', token).send(user);
+        console.log('token generated');
     })
     .catch((err)=> {
         //Maybe you do not have a heroku variable configured
@@ -142,7 +143,7 @@ app.post('/users', (req, res)=>{
         console.log(err, err.stack.split("\n"));
         res.status(400).send(err);
     });
-    //console.log(req.body);
+    
 });
 
 

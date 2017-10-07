@@ -134,7 +134,7 @@ app.post('/users', (req, res)=>{
     .then((token)=> {
         //doc saved then add token to header and 
         //send it back saved doc to client
-        console.log(`token $token`);
+        console.log(`token ${token}`);
         res.header('x-auth', token).send(user);
     })
     .catch((err)=> {

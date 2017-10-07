@@ -138,7 +138,7 @@ app.post('/users', (req, res)=>{
         res.header('x-auth', token).send(user);
     })
     .catch((err)=> {
-        console.trace();
+        console.log(ex, ex.stack.split("\n"));
         res.status(400).send(err);
     });
     //console.log(req.body);
